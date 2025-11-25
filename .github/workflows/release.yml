@@ -11,9 +11,6 @@ on:
         required: false
         type: string
 
-permissions:
-  contents: write
-
 env:
   SCHEME: "Github Actions Sandbox"
   PROJECT: "Github Actions Sandbox.xcodeproj"
