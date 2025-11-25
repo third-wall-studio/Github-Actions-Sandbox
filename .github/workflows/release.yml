@@ -16,6 +16,9 @@ env:
   PROJECT: "Github Actions Sandbox.xcodeproj"
   PRODUCT_NAME: "Github Actions Sandbox"
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: macos-26
