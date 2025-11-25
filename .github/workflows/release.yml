@@ -15,6 +15,7 @@ env:
   SCHEME: "Github Actions Sandbox"
   PROJECT: "Github Actions Sandbox.xcodeproj"
   PRODUCT_NAME: "Github Actions Sandbox"
+  DMG_BACKGROUND_FILE_NAME: "Assets/background@2x.png"
 
 jobs:
   build:
@@ -24,10 +25,26 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
 
+      - name: Get version
+        id: version
+        run: |
+          if [ -n "${{ inputs.version }}" ]; then
+            echo "version=${{ inputs.version }}" >> $GITHUB_OUTPUT
+          elif [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+          else
+            echo "version=$(date +%Y%m%d%H%M%S)" >> $GITHUB_OUTPUT
+          fi
+
       - name: Select Xcode
         run: |
           sudo xcode-select -s /Applications/Xcode_26.1.app/Contents/Developer
           xcodebuild -version
+
+      - name: Set version
+        run: |
+          agvtool new-version ${{ steps.version.outputs.version }}
+          agvtool new-marketing-version ${{ steps.version.outputs.version }}
 
       - name: Import Code Signing Certificate
         env:
@@ -115,36 +132,27 @@ jobs:
           # Staple the notarization ticket
           xcrun stapler staple "$PRODUCT_NAME.app"
 
-      - name: Create DMG
+      - name: Install dmgs tool
         run: |
-          cd $RUNNER_TEMP/export
-          hdiutil create -volname "$PRODUCT_NAME" \
-            -srcfolder "$PRODUCT_NAME.app" \
-            -ov -format UDZO \
-            "$PRODUCT_NAME.dmg"
+          curl -L -o dmgs.tar.gz https://github.com/velocityzen/dmgs/releases/latest/download/dmgs.tar.gz
+          tar -xzf dmgs.tar.gz
+          chmod +x dmgs
+          sudo mv dmgs /usr/local/bin/
 
-      - name: Get version
-        id: version
-        run: |
-          if [ -n "${{ inputs.version }}" ]; then
-            echo "version=${{ inputs.version }}" >> $GITHUB_OUTPUT
-          elif [[ "$GITHUB_REF" == refs/tags/v* ]]; then
-            echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
-          else
-            echo "version=$(date +%Y%m%d%H%M%S)" >> $GITHUB_OUTPUT
-          fi
+      - name: Create DMG
+        run: dmgs create "$PRODUCT_NAME.app" "$DMG_BACKGROUND_FILE_NAME" --sign "$DEVELOPMENT_TEAM"
 
       - name: Upload DMG Artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.PRODUCT_NAME }}-${{ steps.version.outputs.version }}
-          path: ${{ runner.temp }}/export/*.dmg
+          path: ${{ runner.temp }}/*.dmg
 
       - name: Create GitHub Release
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
-          files: ${{ runner.temp }}/export/*.dmg
+          files: ${{ runner.temp }}/*.dmg
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
