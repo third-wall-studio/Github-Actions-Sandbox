@@ -1,6 +1,6 @@
 //
-//  Github_Actions_SanboxApp.swift
-//  Github Actions Sanbox
+//  Github_Actions_SandboxApp.swift
+//  Github Actions Sandbox
 //
 //  Created by velocityzen on 2025-11-25.
 //
@@ -8,7 +8,7 @@
 import SwiftUI
 
 @main
-struct Github_Actions_SanboxApp: App {
+struct Github_Actions_SandboxApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
