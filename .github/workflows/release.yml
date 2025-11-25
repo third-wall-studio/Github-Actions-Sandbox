@@ -148,13 +148,13 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.PRODUCT_NAME }}-${{ steps.version.outputs.version }}
-          path: ${{ runner.temp }}/export/*.dmg
+          path: $${{ env.PRODUCT_NAME }}.dmg
 
       - name: Create GitHub Release
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
-          files: ${{ runner.temp }}/export/*.dmg
+          files: $${{ env.PRODUCT_NAME }}.dmg
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
