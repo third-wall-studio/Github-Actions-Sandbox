@@ -12,9 +12,9 @@ on:
         type: string
 
 env:
-  SCHEME: "Github Actions Sanbox"
-  PROJECT: "Github Actions Sanbox.xcodeproj"
-  PRODUCT_NAME: "Github Actions Sanbox"
+  SCHEME: "Github Actions Sandbox"
+  PROJECT: "Github Actions Sandbox.xcodeproj"
+  PRODUCT_NAME: "Github Actions Sandbox"
 
 jobs:
   build:
