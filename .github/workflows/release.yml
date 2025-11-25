@@ -17,6 +17,9 @@ env:
   PRODUCT_NAME: "Github Actions Sandbox"
   DMG_BACKGROUND_FILE_NAME: "Assets/background@2x.png"
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: macos-26
@@ -150,12 +153,20 @@ jobs:
           name: ${{ env.PRODUCT_NAME }}-${{ steps.version.outputs.version }}
           path: ${{ env.PRODUCT_NAME }}.dmg
 
+      - name: Debug auth
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh auth status
+          gh api user
+          gh api repos/${{ github.repository }}
+
       - name: Create GitHub Release
         if: startsWith(github.ref, 'refs/tags/v')
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create "${{ github.ref_name }}" \
+          gh release create "${{ steps.version.outputs.version }}" \
             "${{ env.PRODUCT_NAME }}.dmg" \
             --title "${{ steps.version.outputs.version }}" \
             --generate-notes
