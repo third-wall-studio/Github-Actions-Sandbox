@@ -140,6 +140,8 @@ jobs:
           sudo mv dmgs /usr/local/bin/
 
       - name: Create DMG
+        env:
+          DEVELOPMENT_TEAM: ${{ secrets.DEVELOPMENT_TEAM }}
         run: dmgs create "$PRODUCT_NAME.app" "$DMG_BACKGROUND_FILE_NAME" --sign "$DEVELOPMENT_TEAM"
 
       - name: Upload DMG Artifact
