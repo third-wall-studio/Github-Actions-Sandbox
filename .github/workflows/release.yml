@@ -158,8 +158,9 @@ jobs:
           tar -xf sparkle.tar.xz
           # Make tools accessible
           chmod +x sparkle/bin/generate_appcast
+          sudo mv sparkle/bin/generate_appcast /usr/local/bin/
           chmod +x sparkle/bin/sign_update
-          echo "$PWD/sparkle/bin" >> $GITHUB_PATH
+          sudo mv sparkle/bin/sign_update /usr/local/bin/
 
       - name: "Sparkle: create distribution package"
         run: |
