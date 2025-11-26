@@ -194,7 +194,7 @@ jobs:
           PUB_DATE=$(date -R)
 
           # Create the new item XML in a temp file
-          cat > $RUNNER_TEMP/item.xml << EOF
+          cat > item.xml << EOF
             <item>
                 <title>Version $VERSION</title>
                 <sparkle:version>$VERSION</sparkle:version>
@@ -210,7 +210,7 @@ jobs:
           EOF
 
           # Insert the new item after <!-- new first --> marker (newest items first)
-          sed -i '' '/<!-- new first -->/r $RUNNER_TEMP/item.xml' docs/appcast.xml
+          sed -i '' '/<!-- new first -->/r item.xml' docs/appcast.xml
 
       - name: "Sparkle: Commit and push appcast.xml"
         env:
