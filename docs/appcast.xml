@@ -11,18 +11,6 @@
         <language>en</language>
 
         <!-- new first -->
-  <item>
-      <title>Version 0.0.6</title>
-      <sparkle:version>0.0.6</sparkle:version>
-      <sparkle:shortVersionString>0.0.6</sparkle:shortVersionString>
-      <pubDate>Wed, 26 Nov 2025 20:27:31 +0000</pubDate>
-      <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
-      <enclosure
-          url="https://github.com/third-wall-studio/Github-Actions-Sandbox/releases/download/0.0.6/Github Actions Sandbox.dmg"
-          sparkle:edSignature="sparkle:edSignature="QFytrossHU5k09VBYAv93BzQwafWnhtQLk+zMXRe49VOBPESTjcNgDJ1kWsvkeHwAjGUsA1oD5PXCY+b/6EuAw==" length="1023177""
-          length="1023177"
-          type="application/octet-stream" />
-  </item>
 
     </channel>
 </rss>

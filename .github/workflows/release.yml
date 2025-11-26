@@ -195,6 +195,7 @@ jobs:
 
           # Create the new item XML in a temp file
           cat > item.xml << EOF
+
             <item>
                 <title>Version $VERSION</title>
                 <sparkle:version>$VERSION</sparkle:version>
@@ -203,8 +204,7 @@ jobs:
                 <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
                 <enclosure
                     url="$DOWNLOAD_URL"
-                    sparkle:edSignature="${{ env.SPARKLE_SIGNATURE }}"
-                    length="${{ env.FILE_SIZE }}"
+                    ${{ env.SPARKLE_SIGNATURE }}
                     type="application/octet-stream" />
             </item>
           EOF
