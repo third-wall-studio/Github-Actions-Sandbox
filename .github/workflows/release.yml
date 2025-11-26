@@ -190,7 +190,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           VERSION="${{ steps.version.outputs.version }}"
-          DOWNLOAD_URL="https://github.com/${{ github.repository }}/releases/download/$VERSION/$PRODUCT_NAME.dmg"
+          # if PRODUCT_NAME has spaces, replace them with dots
+          DOWNLOAD_DMG_NAME="${PRODUCT_NAME// /.}.dmg"
+          DOWNLOAD_URL="https://github.com/${{ github.repository }}/releases/download/$VERSION/$DOWNLOAD_DMG_NAME"
           PUB_DATE=$(date -R)
 
           # Create the new item XML in a temp file

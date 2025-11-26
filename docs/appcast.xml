@@ -12,17 +12,5 @@
 
         <!-- new first -->
 
-  <item>
-      <title>Version 0.0.7</title>
-      <sparkle:version>0.0.7</sparkle:version>
-      <sparkle:shortVersionString>0.0.7</sparkle:shortVersionString>
-      <pubDate>Wed, 26 Nov 2025 20:34:33 +0000</pubDate>
-      <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
-      <enclosure
-          url="https://github.com/third-wall-studio/Github-Actions-Sandbox/releases/download/0.0.7/Github Actions Sandbox.dmg"
-          sparkle:edSignature="hwDE/ksKAle/+CWyphjVEVaw9gLGd8DAQm8FtgtLI/zKxk524G12cn6riXHDN7TpmBr1Ij/oCwdusUVDOWuoBA==" length="1023132"
-          type="application/octet-stream" />
-  </item>
-
     </channel>
 </rss>
