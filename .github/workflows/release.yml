@@ -168,7 +168,7 @@ jobs:
 
       - name: "Sparkle: create distribution package"
         run: |
-          cd build
+          cd $RUNNER_TEMP/export
           # Create final distributable zip
           ditto -c -k --keepParent "$PRODUCT_NAME.app" "$PRODUCT_NAME-${{ steps.version.outputs.version }}.zip"
 
@@ -176,19 +176,12 @@ jobs:
         env:
           SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
         run: |
-          cd build
+          cd $RUNNER_TEMP/export
           # Sign the update with Sparkle's private key
           SIGNATURE=$(echo "$SPARKLE_PRIVATE_KEY" | sign_update "$PRODUCT_NAME-${{ steps.version.outputs.version }}.zip")
           echo "SPARKLE_SIGNATURE=$SIGNATURE" >> $GITHUB_ENV
           FILE_SIZE=$(stat -f%z "$PRODUCT_NAME-${{ steps.version.outputs.version }}.zip")
           echo "FILE_SIZE=$FILE_SIZE" >> $GITHUB_ENV
-
-      - name: "Sparkle: Generate appcast"
-        run: |
-          # If you have existing appcast.xml, you can generate it automatically
-          # For now, we'll create release notes
-          cd build
-          generate_appcast --download-url-prefix "https://github.com/${{ github.repository }}/releases/download/${{ steps.version.outputs.version }}/" .
 
       - name: Create GitHub Release
         env:
