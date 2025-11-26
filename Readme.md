@@ -71,10 +71,10 @@ tar -xf sparkle.tar.xz
 # - Public key (add to your app's Info.plist as SUPublicEDKey)
 ```
 
-Private key can be added directly into keychain, to find it run:
+If private key has been added directly into keychain, then run this to find it:
 
 ```bash
-security find-generic-password -s "https://sparkle-project.org" -a "ed25519" -w`
+security find-generic-password -s "https://sparkle-project.org" -a "ed25519" -w
 ```
 
 
