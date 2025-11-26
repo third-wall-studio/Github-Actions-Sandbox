@@ -171,7 +171,7 @@ jobs:
           SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
         run: |
           # Sign the update with Sparkle's private key
-          SIGNATURE=$(echo "$SPARKLE_PRIVATE_KEY" | sign_update "$PRODUCT_NAME.dmg")
+          SIGNATURE=$(echo "$SPARKLE_PRIVATE_KEY" | sign_update --ed-key-file - "$PRODUCT_NAME.dmg")
           echo "SPARKLE_SIGNATURE=$SIGNATURE" >> $GITHUB_ENV
           FILE_SIZE=$(stat -f%z "$PRODUCT_NAME.dmg")
           echo "FILE_SIZE=$FILE_SIZE" >> $GITHUB_ENV
