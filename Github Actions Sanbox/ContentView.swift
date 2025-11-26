@@ -1,10 +1,3 @@
-//
-//  ContentView.swift
-//  Github Actions Sanbox
-//
-//  Created by velocityzen on 2025-11-25.
-//
-
 import SwiftUI
 
 struct ContentView: View {

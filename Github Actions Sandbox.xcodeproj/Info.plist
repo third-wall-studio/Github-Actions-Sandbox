@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Your app's bundle version (increment for each release) -->
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	
+	<!-- Your app's marketing version -->
+	<key>CFBundleShortVersionString</key>
+	<string>1.0.0</string>
+	
+	<!-- SPARKLE CONFIGURATION -->
+	<!-- Replace this URL with your appcast.xml location -->
+	<key>SUFeedURL</key>
+	<string>https://your-domain.com/appcast.xml</string>
+	
+	<!-- Public EdDSA key for verifying updates (generate this with Sparkle's tools) -->
+	<!-- Remove this key initially, then add it after generating your signing key -->
+	<!--
+	<key>SUPublicEDKey</key>
+	<string>YOUR_PUBLIC_KEY_HERE</string>
+	-->
+</dict>
+</plist>

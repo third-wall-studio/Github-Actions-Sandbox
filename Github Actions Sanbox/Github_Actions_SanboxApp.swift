@@ -1,11 +1,5 @@
-//
-//  Github_Actions_SandboxApp.swift
-//  Github Actions Sandbox
-//
-//  Created by velocityzen on 2025-11-25.
-//
-
 import SwiftUI
+import Sparkle
 
 @main
 struct Github_Actions_SandboxApp: App {
@@ -13,5 +7,12 @@ struct Github_Actions_SandboxApp: App {
         WindowGroup {
             ContentView()
         }
+        .commands {
+            // Add "Check for Updates..." menu item to the app menu
+            CommandGroup(after: .appInfo) {
+                CheckForUpdatesView()
+            }
+        }
     }
 }
+

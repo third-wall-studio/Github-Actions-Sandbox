@@ -4,4 +4,10 @@
    <FileRef
       location = "self:">
    </FileRef>
+   <FileRef
+      location = "group:Github_Actions_Sandbox.entitlements">
+   </FileRef>
+   <FileRef
+      location = "group:Info.plist">
+   </FileRef>
 </Workspace>
