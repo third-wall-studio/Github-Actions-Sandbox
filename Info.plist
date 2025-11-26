@@ -20,5 +20,10 @@
 	<!-- Remove this key initially, then add it after generating your signing key -->
 	<key>SUPublicEDKey</key>
     <string>866uiQmcnZrZZJ9XFLYosyRbjOSFsAFrTdUNzctdFsw=</string>
+
+    <!-- https://sparkle-project.org/documentation/sandboxing/ -->
+    <!-- Enable the installer launcher service to allow Sparkle to install updates -->
+    <key>SUEnableInstallerLauncherService</key>
+    <true />
 </dict>
 </plist>

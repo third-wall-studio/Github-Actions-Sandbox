@@ -19,9 +19,11 @@
       <pubDate>Wed, 26 Nov 2025 20:55:29 +0000</pubDate>
       <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
       <enclosure
-          url="https://github.com/third-wall-studio/Github-Actions-Sandbox/releases/download/0.0.8/Github.Actions.Sandbox.dmg"
-          sparkle:edSignature="uOf8XpLQsp92d6oWkONk8HiaBw4X3RUFvutbXk5VL9+Ln9G5/z+AzVtowfK/P+EqEiLTmIYSAktu9RTJc7XTAg==" length="1024737"
-          type="application/octet-stream" />
+                url="https://github.com/third-wall-studio/Github-Actions-Sandbox/releases/download/0.0.8/Github.Actions.Sandbox.dmg"
+                sparkle:edSignature="uOf8XpLQsp92d6oWkONk8HiaBw4X3RUFvutbXk5VL9+Ln9G5/z+AzVtowfK/P+EqEiLTmIYSAktu9RTJc7XTAg=="
+                length="1024737"
+                type="application/octet-stream"
+            />
   </item>
 
     </channel>
