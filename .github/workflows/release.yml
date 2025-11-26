@@ -220,8 +220,8 @@ jobs:
           )
 
           # Insert the new item after <!-- new first --> marker (newest items first)
-          awk -v item="$NEW_ITEM" '/<!-- new first -->/ { print; print item; next } 1' pages/appcast.xml > pages/appcast_new.xml
-          mv pages/appcast_new.xml pages/appcast.xml
+          awk -v item="$NEW_ITEM" '/<!-- new first -->/ { print; print item; next } 1' docs/appcast.xml > docs/appcast_new.xml
+          mv docs/appcast_new.xml docs/appcast.xml
 
       - name: "Sparkle: Commit and push appcast.xml"
         env:
@@ -229,7 +229,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add pages/appcast.xml
+          git add docs/appcast.xml
           git commit -m "Update appcast.xml for version ${{ steps.version.outputs.version }}"
           git push origin HEAD:main
 
