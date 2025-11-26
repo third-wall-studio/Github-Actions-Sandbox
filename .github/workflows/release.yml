@@ -154,13 +154,17 @@ jobs:
       - name: "Sparkle: Install CLI tools"
         run: |
           # Download Sparkle release with CLI tools
+          mkdir sparkle
+          cd sparkle
           curl -L -o sparkle.tar.xz https://github.com/sparkle-project/Sparkle/releases/download/2.8.1/Sparkle-2.8.1.tar.xz
           tar -xf sparkle.tar.xz
           # Make tools accessible
-          chmod +x sparkle/bin/generate_appcast
-          sudo mv sparkle/bin/generate_appcast /usr/local/bin/
-          chmod +x sparkle/bin/sign_update
-          sudo mv sparkle/bin/sign_update /usr/local/bin/
+          chmod +x bin/generate_appcast
+          sudo mv bin/generate_appcast /usr/local/bin/
+          chmod +x bin/sign_update
+          sudo mv bin/sign_update /usr/local/bin/
+          cd ..
+          rm -rf sparkle
 
       - name: "Sparkle: create distribution package"
         run: |
