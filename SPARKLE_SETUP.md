@@ -86,14 +86,13 @@ Go to: **Settings → Secrets and variables → Actions → New repository secre
    - Sign in → Security → App-Specific Passwords → Generate
 
 7. **`SPARKLE_PRIVATE_KEY`** - The private key from `generate_keys`
-   
-   Format (just paste the entire key including header):
-   ```
-   -----BEGIN PRIVATE KEY-----
-   YOUR_PRIVATE_KEY_HERE
-   -----END PRIVATE KEY-----
-   ```
+  
+  To get the private key from your keychain you can run: 
 
+```bash
+security find-generic-password -s "https://sparkle-project.org" -a "ed25519" -w`
+```
+  
 ## Step 4: Host Your Appcast
 
 You have several options:

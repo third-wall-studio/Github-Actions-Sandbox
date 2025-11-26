@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<rss
+    version="2.0"
+    xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+>
+    <channel>
+        <title>Github Actions Sandbox Updates</title>
+        <link>https://github.com/third-wall-studio/Github-Actions-Sandbox</link>
+        <description>Most recent updates to Github Actions Sandbox</description>
+        <language>en</language>
+
+        <!-- new first -->
+
+    </channel>
+</rss>
