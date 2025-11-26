@@ -193,8 +193,8 @@ jobs:
           DOWNLOAD_URL="https://github.com/${{ github.repository }}/releases/download/$VERSION/$PRODUCT_NAME.dmg"
           PUB_DATE=$(date -R)
 
-          # Create the new item XML
-          NEW_ITEM=$(cat << EOF
+          # Create the new item XML in a temp file
+          cat > $RUNNER_TEMP/item.xml << EOF
             <item>
                 <title>Version $VERSION</title>
                 <sparkle:version>$VERSION</sparkle:version>
@@ -208,11 +208,9 @@ jobs:
                     type="application/octet-stream" />
             </item>
           EOF
-          )
 
           # Insert the new item after <!-- new first --> marker (newest items first)
-          awk -v item="$NEW_ITEM" '/<!-- new first -->/ { print; print item; next } 1' docs/appcast.xml > docs/appcast_new.xml
-          mv docs/appcast_new.xml docs/appcast.xml
+          sed -i '' '/<!-- new first -->/r $RUNNER_TEMP/item.xml' docs/appcast.xml
 
       - name: "Sparkle: Commit and push appcast.xml"
         env:
