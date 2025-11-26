@@ -166,21 +166,14 @@ jobs:
           cd ..
           rm -rf sparkle
 
-      - name: "Sparkle: create distribution package"
-        run: |
-          cd $RUNNER_TEMP/export
-          # Create final distributable zip
-          ditto -c -k --keepParent "$PRODUCT_NAME.app" "$PRODUCT_NAME-${{ steps.version.outputs.version }}.zip"
-
       - name: "Sparkle: Sign update package"
         env:
           SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
         run: |
-          cd $RUNNER_TEMP/export
           # Sign the update with Sparkle's private key
-          SIGNATURE=$(echo "$SPARKLE_PRIVATE_KEY" | sign_update "$PRODUCT_NAME-${{ steps.version.outputs.version }}.zip")
+          SIGNATURE=$(echo "$SPARKLE_PRIVATE_KEY" | sign_update "$PRODUCT_NAME.dmg")
           echo "SPARKLE_SIGNATURE=$SIGNATURE" >> $GITHUB_ENV
-          FILE_SIZE=$(stat -f%z "$PRODUCT_NAME-${{ steps.version.outputs.version }}.zip")
+          FILE_SIZE=$(stat -f%z "$PRODUCT_NAME.dmg")
           echo "FILE_SIZE=$FILE_SIZE" >> $GITHUB_ENV
 
       - name: Create GitHub Release
