@@ -2,15 +2,11 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CFBundleShortVersionString</key>
-	<string>0.0.14</string>
-	<key>CFBundleVersion</key>
-	<string>0.0.14</string>
 	<key>SUEnableInstallerLauncherService</key>
 	<true/>
 	<key>SUFeedURL</key>
 	<string>https://third-wall-studio.github.io/Github-Actions-Sandbox/appcast.xml</string>
 	<key>SUPublicEDKey</key>
-	<string>866uiQmcnZrZZJ9XFLYosyRbjOSFsAFrTdUNzctdFsw=</string>
+	<string>866uiQmcnZrZZJ9XFLYosyRbjOSFsAFrTdUNzctdFsw</string>
 </dict>
 </plist>

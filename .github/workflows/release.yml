@@ -42,12 +42,10 @@ jobs:
           sudo xcode-select -s /Applications/Xcode_26.1.app/Contents/Developer
           xcodebuild -version
 
-      - name: Set version
+      - name: Set version in Xcode project
         run: |
-          agvtool new-version -all "${{ steps.version.outputs.version }}"
-          agvtool new-marketing-version "${{ steps.version.outputs.version }}"
-          plutil -replace CFBundleShortVersionString -string "${{ steps.version.outputs.version }}" Info.plist
-          plutil -replace CFBundleVersion -string "${{ steps.version.outputs.version }}" Info.plist
+          sed -i '' 's/MARKETING_VERSION = [^;]*;/MARKETING_VERSION = ${{ steps.version.outputs.version }};/g' "$PROJECT/project.pbxproj"
+          sed -i '' 's/CURRENT_PROJECT_VERSION = [^;]*;/CURRENT_PROJECT_VERSION = ${{ steps.version.outputs.version }};/g' "$PROJECT/project.pbxproj"
 
       - name: Import Code Signing Certificate
         env:
@@ -222,7 +220,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add docs/appcast.xml
-          git add Info.plist
           git add "$PROJECT/project.pbxproj"
           git commit -m "Update appcast.xml for version ${{ steps.version.outputs.version }}"
           git push origin HEAD:main
