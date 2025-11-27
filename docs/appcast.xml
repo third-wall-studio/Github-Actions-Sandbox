@@ -13,36 +13,16 @@
         <!-- new first -->
 
   <item>
-      <title>Version 0.0.16</title>
-      <sparkle:version>0.0.16</sparkle:version>
-      <pubDate>Thu, 27 Nov 2025 03:59:43 +0000</pubDate>
-      <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
-      <enclosure
-          url="https://github.com/third-wall-studio/Github-Actions-Sandbox/releases/download/0.0.16/Github.Actions.Sandbox.dmg"
-          sparkle:edSignature="Lga7jH5RGwqv1ZMYGzkH9ALcvzZLIa+JWl9EfLtDS6tOKtGb29PqOrJmmrAcR3QO+V1EaxXt5C7KDnsEgidRBw==" length="1023348"
-          type="application/octet-stream" />
-  </item>
-
-  <item>
       <title>Version 0.0.14</title>
       <sparkle:version>0.0.14</sparkle:version>
       <pubDate>Thu, 27 Nov 2025 02:52:28 +0000</pubDate>
       <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
       <enclosure
-          url="https://github.com/third-wall-studio/Github-Actions-Sandbox/releases/download/0.0.14/Github.Actions.Sandbox.dmg"
-          sparkle:edSignature="FiiVNbdQ+FJTXH66rA+i3f35fhbcvOxRkWJeKm6x05JDw6kIx4iT8MooOrs5KgbRi1FcvHLzVzkVal/7Ue0xCA==" length="1031171"
-          type="application/octet-stream" />
-  </item>
-
-  <item>
-      <title>Version 0.0.13</title>
-      <sparkle:version>0.0.13</sparkle:version>
-      <pubDate>Thu, 27 Nov 2025 02:38:06 +0000</pubDate>
-      <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
-      <enclosure
-          url="https://github.com/third-wall-studio/Github-Actions-Sandbox/releases/download/0.0.13/Github.Actions.Sandbox.dmg"
-          sparkle:edSignature="ZQ2c8ZjGDGcVMEdDttfBoWhpm71OmDMaqgHfJJ0fIM9yW++qbuMl4QRimWlzX+rt6PY4nVh8+0r/JIxUHqEsDw==" length="1023321"
-          type="application/octet-stream" />
+                url="https://github.com/third-wall-studio/Github-Actions-Sandbox/releases/download/0.0.14/Github.Actions.Sandbox.dmg"
+                sparkle:edSignature="FiiVNbdQ+FJTXH66rA+i3f35fhbcvOxRkWJeKm6x05JDw6kIx4iT8MooOrs5KgbRi1FcvHLzVzkVal/7Ue0xCA=="
+                length="1031171"
+                type="application/octet-stream"
+            />
   </item>
 
   <item>
@@ -51,9 +31,11 @@
       <pubDate>Thu, 27 Nov 2025 02:12:46 +0000</pubDate>
       <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
       <enclosure
-          url="https://github.com/third-wall-studio/Github-Actions-Sandbox/releases/download/0.0.12/Github.Actions.Sandbox.dmg"
-          sparkle:edSignature="ArhJVZEXeI0IxA2YCnxGvGki/2h8y9eGDJLV36uwzsOLVm/RhuEYcOuQGxqBGdPdRY2BMXm4/DiqbJu36VIMAA==" length="1023410"
-          type="application/octet-stream" />
+                url="https://github.com/third-wall-studio/Github-Actions-Sandbox/releases/download/0.0.12/Github.Actions.Sandbox.dmg"
+                sparkle:edSignature="ArhJVZEXeI0IxA2YCnxGvGki/2h8y9eGDJLV36uwzsOLVm/RhuEYcOuQGxqBGdPdRY2BMXm4/DiqbJu36VIMAA=="
+                length="1023410"
+                type="application/octet-stream"
+            />
   </item>
 
   <item>
@@ -62,9 +44,11 @@
       <pubDate>Wed, 26 Nov 2025 21:32:31 +0000</pubDate>
       <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
       <enclosure
-          url="https://github.com/third-wall-studio/Github-Actions-Sandbox/releases/download/0.0.10/Github.Actions.Sandbox.dmg"
-          sparkle:edSignature="4Ydcp/pw2/lYD0l8Aw3FWLhZRYY8ivypDy4+fh0yPfQLYqEotEDwqQpgTnDIl1JvmtKvBFRnwIY266GobWxUDw==" length="1028725"
-          type="application/octet-stream" />
+                url="https://github.com/third-wall-studio/Github-Actions-Sandbox/releases/download/0.0.10/Github.Actions.Sandbox.dmg"
+                sparkle:edSignature="4Ydcp/pw2/lYD0l8Aw3FWLhZRYY8ivypDy4+fh0yPfQLYqEotEDwqQpgTnDIl1JvmtKvBFRnwIY266GobWxUDw=="
+                length="1028725"
+                type="application/octet-stream"
+            />
   </item>
 
   <item>
@@ -73,9 +57,11 @@
       <pubDate>Wed, 26 Nov 2025 21:25:05 +0000</pubDate>
       <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
       <enclosure
-          url="https://github.com/third-wall-studio/Github-Actions-Sandbox/releases/download/0.0.9/Github.Actions.Sandbox.dmg"
-          sparkle:edSignature="tpXyaT595OSFDQVtCM7lVpx56c/pJVDK9gdq69+EQJGneobcO2vLaQDNYS0i7z2gAwgmk6nGXebukmC6LudkAg==" length="1023401"
-          type="application/octet-stream" />
+                url="https://github.com/third-wall-studio/Github-Actions-Sandbox/releases/download/0.0.9/Github.Actions.Sandbox.dmg"
+                sparkle:edSignature="tpXyaT595OSFDQVtCM7lVpx56c/pJVDK9gdq69+EQJGneobcO2vLaQDNYS0i7z2gAwgmk6nGXebukmC6LudkAg=="
+                length="1023401"
+                type="application/octet-stream"
+            />
   </item>
 
   <item>
