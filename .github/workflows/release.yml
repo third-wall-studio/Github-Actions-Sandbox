@@ -44,6 +44,8 @@ jobs:
 
       - name: Set version
         run: |
+          agvtool new-version -all "${{ steps.version.outputs.version }}"
+          agvtool new-marketing-version "${{ steps.version.outputs.version }}"
           plutil -replace CFBundleShortVersionString -string "${{ steps.version.outputs.version }}" Info.plist
           plutil -replace CFBundleVersion -string "${{ steps.version.outputs.version }}" Info.plist
 
@@ -213,7 +215,7 @@ jobs:
           # Insert the new item after <!-- new first --> marker (newest items first)
           sed -i '' '/<!-- new first -->/r item.xml' docs/appcast.xml
 
-      - name: "Sparkle: Commit and push appcast.xml & Info.plist"
+      - name: "Sparkle: Commit and push appcast.xml & new version changes"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -221,6 +223,7 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add docs/appcast.xml
           git add Info.plist
+          git add "$PROJECT/project.pbxproj"
           git commit -m "Update appcast.xml for version ${{ steps.version.outputs.version }}"
           git push origin HEAD:main
 
