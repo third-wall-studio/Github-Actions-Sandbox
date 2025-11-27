@@ -217,7 +217,7 @@ jobs:
           # Insert the new item after <!-- new first --> marker (newest items first)
           sed -i '' '/<!-- new first -->/r item.xml' docs/appcast.xml
 
-      - name: "Sparkle: Commit and push appcast.xml"
+      - name: "Sparkle: Commit and push appcast.xml & Info.plist"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
