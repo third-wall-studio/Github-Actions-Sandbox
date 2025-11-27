@@ -44,12 +44,8 @@ jobs:
 
       - name: Set version
         run: |
-          agvtool new-version ${{ steps.version.outputs.version }}
-          agvtool new-marketing-version ${{ steps.version.outputs.version }}
           plutil -replace CFBundleShortVersionString -string "${{ steps.version.outputs.version }}" Info.plist
-          CURRENT_BUILD=$(plutil -extract CFBundleVersion raw Info.plist)
-          NEW_BUILD=$((CURRENT_BUILD + 1))
-          plutil -replace CFBundleVersion -string "$NEW_BUILD" Info.plist
+          plutil -replace CFBundleVersion -string "${{ steps.version.outputs.version }}" Info.plist
 
       - name: Import Code Signing Certificate
         env:

@@ -1,15 +1,17 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+    "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
 	<key>CFBundleShortVersionString</key>
 	<string>0.0.12</string>
 	<key>CFBundleVersion</key>
-	<string>2</string>
+	<string>0.0.12</string>
 	<key>SUEnableInstallerLauncherService</key>
-	<true/>
+	<true />
 	<key>SUFeedURL</key>
-	<string>https://third-wall-studio.github.io/Github-Actions-Sandbox/appcast.xml</string>
+	<string
+        >https://third-wall-studio.github.io/Github-Actions-Sandbox/appcast.xml</string>
 	<key>SUPublicEDKey</key>
 	<string>866uiQmcnZrZZJ9XFLYosyRbjOSFsAFrTdUNzctdFsw=</string>
 </dict>
