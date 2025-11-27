@@ -14,6 +14,7 @@ This project uses a GitHub Actions workflow (`.github/workflows/release.yml`) to
 4. Creates a signed DMG
 5. Creates a GitHub Release with the DMG
 6. Updates the Sparkle appcast.xml for auto-updates
+7. Keeps the version number in sync with the Xcode project
 
 ### Prerequisites
 
@@ -151,8 +152,6 @@ env:
 ### Workflow Requirements
 
 - **Runner**: `macos-26` (macOS with Xcode 26.1)
-- **Xcode versioning**: Project must use `agvtool` for version management
-  - Enable in Build Settings: Versioning System = Apple Generic
 - **DMG creation**: Uses [dmgs](https://github.com/velocityzen/dmgs) tool
 - **Auto-updates**: Uses [Sparkle](https://sparkle-project.org/) framework
 
