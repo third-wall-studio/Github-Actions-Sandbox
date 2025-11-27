@@ -28,6 +28,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		270B01E12ED8034B00341D90 /* Github-Actions-Sandbox-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Github-Actions-Sandbox-Info.plist"; sourceTree = "<group>"; };
 		2711B0B62ED5F42700F468E3 /* Github Actions Sandbox.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Github Actions Sandbox.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2711B0C32ED5F42800F468E3 /* Github Actions SandboxTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Github Actions SandboxTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2711B0CD2ED5F42800F468E3 /* Github Actions SandboxUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Github Actions SandboxUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -80,6 +81,7 @@
 		2711B0AD2ED5F42700F468E3 = {
 			isa = PBXGroup;
 			children = (
+				270B01E12ED8034B00341D90 /* Github-Actions-Sandbox-Info.plist */,
 				2711B0B82ED5F42700F468E3 /* Github Actions Sanbox */,
 				2711B0C62ED5F42800F468E3 /* Github Actions SanboxTests */,
 				2711B0D02ED5F42800F468E3 /* Github Actions SanboxUITests */,
@@ -421,7 +423,7 @@
 				ENABLE_RESOURCE_ACCESS_USB = NO;
 				ENABLE_USER_SELECTED_FILES = readwrite;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_FILE = "Github-Actions-Sandbox-Info.plist";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -479,7 +481,7 @@
 				ENABLE_RESOURCE_ACCESS_USB = NO;
 				ENABLE_USER_SELECTED_FILES = readwrite;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_FILE = "Github-Actions-Sandbox-Info.plist";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
