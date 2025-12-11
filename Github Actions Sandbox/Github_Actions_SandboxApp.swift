@@ -1,5 +1,5 @@
-import SwiftUI
 import Sparkle
+import SwiftUI
 
 @main
 struct Github_Actions_SandboxApp: App {
@@ -15,4 +15,3 @@ struct Github_Actions_SandboxApp: App {
         }
     }
 }
-
