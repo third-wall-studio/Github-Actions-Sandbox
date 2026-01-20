@@ -70,16 +70,31 @@ jobs:
           security set-key-partition-list -S apple-tool:,apple: -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
           security list-keychain -d user -s $KEYCHAIN_PATH
 
-      - name: Update Entitlements with Team ID
+      - name: Prepare Entitlements for CI Build
         env:
           DEVELOPMENT_TEAM: ${{ secrets.DEVELOPMENT_TEAM }}
         run: |
-          # Replace $(AppIdentifierPrefix) with Team ID in entitlements files
-          find . -name "*.entitlements" -exec sed -i '' 's/\$(AppIdentifierPrefix)/'"${DEVELOPMENT_TEAM}"'./g' {} \;
           # Set CODE_SIGN_STYLE to Manual in project file
           sed -i '' 's/CODE_SIGN_STYLE = Automatic;/CODE_SIGN_STYLE = Manual;/g' "$PROJECT/project.pbxproj"
           # Disable REGISTER_APP_GROUPS to avoid provisioning profile requirement
           sed -i '' 's/REGISTER_APP_GROUPS = YES;/REGISTER_APP_GROUPS = NO;/g' "$PROJECT/project.pbxproj"
+
+          # Create a build-time entitlements without keychain-access-groups (causes profile requirement)
+          # Save original for later re-signing
+          ENTITLEMENTS_FILE=$(find . -name "*.entitlements" -print -quit)
+          cp "$ENTITLEMENTS_FILE" "$RUNNER_TEMP/original.entitlements"
+
+          # Replace $(AppIdentifierPrefix) with Team ID in the original (for re-signing later)
+          sed -i '' 's/\$(AppIdentifierPrefix)/'"${DEVELOPMENT_TEAM}"'./g' "$RUNNER_TEMP/original.entitlements"
+
+          # Remove keychain-access-groups from build entitlements
+          plutil -remove 'keychain-access-groups' "$ENTITLEMENTS_FILE" 2>/dev/null || true
+
+          echo "=== Build entitlements (without keychain-access-groups) ==="
+          cat "$ENTITLEMENTS_FILE"
+          echo ""
+          echo "=== Final entitlements (for re-signing) ==="
+          cat "$RUNNER_TEMP/original.entitlements"
 
       - name: Build and Archive
         env:
@@ -126,6 +141,21 @@ jobs:
             -archivePath $RUNNER_TEMP/archive.xcarchive \
             -exportPath $RUNNER_TEMP/export \
             -exportOptionsPlist $RUNNER_TEMP/ExportOptions.plist
+
+      - name: Re-sign App with Keychain Entitlements
+        run: |
+          # Re-sign the app with full entitlements including keychain-access-groups
+          codesign --force --deep --sign "Developer ID Application" \
+            --entitlements "$RUNNER_TEMP/original.entitlements" \
+            --options runtime \
+            --timestamp \
+            "$RUNNER_TEMP/export/$PRODUCT_NAME.app"
+
+          # Verify the signature
+          codesign --verify --verbose "$RUNNER_TEMP/export/$PRODUCT_NAME.app"
+
+          echo "=== Entitlements in signed app ==="
+          codesign -d --entitlements - "$RUNNER_TEMP/export/$PRODUCT_NAME.app"
 
       - name: Notarize App
         env:
