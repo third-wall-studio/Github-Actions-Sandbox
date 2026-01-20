@@ -13,6 +13,17 @@
         <!-- new first -->
 
   <item>
+      <title>Version 0.25.0</title>
+      <sparkle:version>0.25.0</sparkle:version>
+      <pubDate>Tue, 20 Jan 2026 19:52:36 +0000</pubDate>
+      <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+      <enclosure
+          url="https://github.com/third-wall-studio/Github-Actions-Sandbox/releases/download/0.25.0/Github.Actions.Sandbox.dmg"
+          sparkle:edSignature="2MUbW5HdVBCPhddqhalDe1D9/UVUmjtppvje6KUY68fjeyWn4Ln/a3QfYEO8e0Yov/Tp/wggztmf5E4UHx5GAw==" length="1023071"
+          type="application/octet-stream" />
+  </item>
+
+  <item>
       <title>Version 0.0.17</title>
       <sparkle:version>0.0.17</sparkle:version>
       <pubDate>Thu, 27 Nov 2025 04:08:18 +0000</pubDate>
