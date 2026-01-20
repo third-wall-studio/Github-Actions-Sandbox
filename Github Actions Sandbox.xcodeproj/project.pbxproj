@@ -7,6 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		27263C1F2F20070A00B3519E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27263C1B2F20070A00B3519E /* ContentView.swift */; };
+		27263C202F20070A00B3519E /* Updater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27263C1D2F20070A00B3519E /* Updater.swift */; };
+		27263C212F20070A00B3519E /* Github_Actions_SandboxApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27263C1C2F20070A00B3519E /* Github_Actions_SandboxApp.swift */; };
+		27263C232F20070A00B3519E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27263C1A2F20070A00B3519E /* Assets.xcassets */; };
+		27263C242F20070A00B3519E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27263C1B2F20070A00B3519E /* ContentView.swift */; };
+		27263C252F20070A00B3519E /* Updater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27263C1D2F20070A00B3519E /* Updater.swift */; };
+		27263C262F20070A00B3519E /* Github_Actions_SandboxApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27263C1C2F20070A00B3519E /* Github_Actions_SandboxApp.swift */; };
+		27263C282F20070A00B3519E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27263C1A2F20070A00B3519E /* Assets.xcassets */; };
+		27263C2A2F20070A00B3519E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27263C1A2F20070A00B3519E /* Assets.xcassets */; };
+		27263C2B2F20070A00B3519E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27263C1B2F20070A00B3519E /* ContentView.swift */; };
+		27263C2C2F20070A00B3519E /* Updater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27263C1D2F20070A00B3519E /* Updater.swift */; };
+		27263C2D2F20070A00B3519E /* Github_Actions_SandboxApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27263C1C2F20070A00B3519E /* Github_Actions_SandboxApp.swift */; };
 		2794FE342ED6531B00A7E337 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 2794FE332ED6531B00A7E337 /* Sparkle */; };
 /* End PBXBuildFile section */
 
@@ -32,14 +44,13 @@
 		2711B0B62ED5F42700F468E3 /* Github Actions Sandbox.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Github Actions Sandbox.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2711B0C32ED5F42800F468E3 /* Github Actions SandboxTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Github Actions SandboxTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2711B0CD2ED5F42800F468E3 /* Github Actions SandboxUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Github Actions SandboxUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		27263C1A2F20070A00B3519E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		27263C1B2F20070A00B3519E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		27263C1C2F20070A00B3519E /* Github_Actions_SandboxApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Github_Actions_SandboxApp.swift; sourceTree = "<group>"; };
+		27263C1D2F20070A00B3519E /* Updater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Updater.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		2711B0B82ED5F42700F468E3 /* Github Actions Sanbox */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "Github Actions Sanbox";
-			sourceTree = "<group>";
-		};
 		2711B0C62ED5F42800F468E3 /* Github Actions SanboxTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = "Github Actions SanboxTests";
@@ -81,8 +92,8 @@
 		2711B0AD2ED5F42700F468E3 = {
 			isa = PBXGroup;
 			children = (
+				27263C1E2F20070A00B3519E /* Github Actions Sandbox */,
 				270B01E12ED8034B00341D90 /* Github-Actions-Sandbox-Info.plist */,
-				2711B0B82ED5F42700F468E3 /* Github Actions Sanbox */,
 				2711B0C62ED5F42800F468E3 /* Github Actions SanboxTests */,
 				2711B0D02ED5F42800F468E3 /* Github Actions SanboxUITests */,
 				2711B0B72ED5F42700F468E3 /* Products */,
@@ -99,6 +110,17 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		27263C1E2F20070A00B3519E /* Github Actions Sandbox */ = {
+			isa = PBXGroup;
+			children = (
+				27263C1A2F20070A00B3519E /* Assets.xcassets */,
+				27263C1B2F20070A00B3519E /* ContentView.swift */,
+				27263C1C2F20070A00B3519E /* Github_Actions_SandboxApp.swift */,
+				27263C1D2F20070A00B3519E /* Updater.swift */,
+			);
+			path = "Github Actions Sandbox";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -113,9 +135,6 @@
 			buildRules = (
 			);
 			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				2711B0B82ED5F42700F468E3 /* Github Actions Sanbox */,
 			);
 			name = "Github Actions Sandbox";
 			packageProductDependencies = (
@@ -223,6 +242,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27263C232F20070A00B3519E /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -230,6 +250,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27263C282F20070A00B3519E /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -237,6 +258,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27263C2A2F20070A00B3519E /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -247,6 +269,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27263C1F2F20070A00B3519E /* ContentView.swift in Sources */,
+				27263C202F20070A00B3519E /* Updater.swift in Sources */,
+				27263C212F20070A00B3519E /* Github_Actions_SandboxApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -254,6 +279,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27263C242F20070A00B3519E /* ContentView.swift in Sources */,
+				27263C252F20070A00B3519E /* Updater.swift in Sources */,
+				27263C262F20070A00B3519E /* Github_Actions_SandboxApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -261,6 +289,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27263C2B2F20070A00B3519E /* ContentView.swift in Sources */,
+				27263C2C2F20070A00B3519E /* Updater.swift in Sources */,
+				27263C2D2F20070A00B3519E /* Github_Actions_SandboxApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
