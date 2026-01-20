@@ -78,6 +78,9 @@ jobs:
           find . -name "*.entitlements" -exec sed -i '' 's/\$(AppIdentifierPrefix)/'"${DEVELOPMENT_TEAM}"'./g' {} \;
           # Set CODE_SIGN_STYLE to Manual in project file
           sed -i '' 's/CODE_SIGN_STYLE = Automatic;/CODE_SIGN_STYLE = Manual;/g' "$PROJECT/project.pbxproj"
+          # Debug: show entitlements content
+          echo "=== Entitlements files after replacement ==="
+          find . -name "*.entitlements" -exec echo "File: {}" \; -exec cat {} \;
 
       - name: Build and Archive
         env:
