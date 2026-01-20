@@ -144,18 +144,42 @@ jobs:
 
       - name: Re-sign App with Keychain Entitlements
         run: |
-          # Re-sign the app with full entitlements including keychain-access-groups
-          codesign --force --deep --sign "Developer ID Application" \
+          APP_PATH="$RUNNER_TEMP/export/$PRODUCT_NAME.app"
+
+          # Sign nested components first (inside out) - frameworks, dylibs, XPC services
+          # Sign all Mach-O binaries inside Frameworks
+          if [ -d "$APP_PATH/Contents/Frameworks" ]; then
+            find "$APP_PATH/Contents/Frameworks" -type f \( -name "*.dylib" -o -perm +111 \) 2>/dev/null | while read -r file; do
+              # Check if it's a Mach-O binary
+              if file "$file" | grep -q "Mach-O"; then
+                codesign --force --sign "Developer ID Application" --options runtime --timestamp "$file" 2>/dev/null || true
+              fi
+            done
+
+            # Sign framework bundles
+            find "$APP_PATH/Contents/Frameworks" -name "*.framework" -type d 2>/dev/null | while read -r framework; do
+              codesign --force --sign "Developer ID Application" --options runtime --timestamp "$framework"
+            done
+          fi
+
+          # Sign XPC services if any
+          find "$APP_PATH" -name "*.xpc" -type d 2>/dev/null | while read -r xpc; do
+            codesign --force --sign "Developer ID Application" --options runtime --timestamp "$xpc"
+          done
+
+          # Finally sign the main app with entitlements
+          codesign --force --sign "Developer ID Application" \
             --entitlements "$RUNNER_TEMP/original.entitlements" \
             --options runtime \
             --timestamp \
-            "$RUNNER_TEMP/export/$PRODUCT_NAME.app"
+            "$APP_PATH"
 
           # Verify the signature
-          codesign --verify --verbose "$RUNNER_TEMP/export/$PRODUCT_NAME.app"
+          codesign --verify --deep --strict "$APP_PATH"
+          echo "Signature verification passed"
 
           echo "=== Entitlements in signed app ==="
-          codesign -d --entitlements - "$RUNNER_TEMP/export/$PRODUCT_NAME.app"
+          codesign -d --entitlements - "$APP_PATH"
 
       - name: Notarize App
         env:
