@@ -74,7 +74,10 @@ jobs:
         env:
           DEVELOPMENT_TEAM: ${{ secrets.DEVELOPMENT_TEAM }}
         run: |
-          find . -name "*.entitlements" -exec sed -i '' "s/\$(AppIdentifierPrefix)/${DEVELOPMENT_TEAM}./g" {} \;
+          # Replace $(AppIdentifierPrefix) with Team ID in entitlements files
+          find . -name "*.entitlements" -exec sed -i '' 's/\$(AppIdentifierPrefix)/'"${DEVELOPMENT_TEAM}"'./g' {} \;
+          # Set CODE_SIGN_STYLE to Manual in project file
+          sed -i '' 's/CODE_SIGN_STYLE = Automatic;/CODE_SIGN_STYLE = Manual;/g' "$PROJECT/project.pbxproj"
 
       - name: Build and Archive
         env:
