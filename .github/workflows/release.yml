@@ -70,31 +70,30 @@ jobs:
           security set-key-partition-list -S apple-tool:,apple: -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
           security list-keychain -d user -s $KEYCHAIN_PATH
 
-      - name: Prepare Entitlements for CI Build
+      - name: Install Provisioning Profile
         env:
-          DEVELOPMENT_TEAM: ${{ secrets.DEVELOPMENT_TEAM }}
+          PROVISIONING_PROFILE_BASE64: ${{ secrets.PROVISIONING_PROFILE_BASE64 }}
+        run: |
+          # Decode provisioning profile
+          PP_PATH=$RUNNER_TEMP/profile.provisionprofile
+          echo -n "$PROVISIONING_PROFILE_BASE64" | base64 --decode -o $PP_PATH
+
+          # Install provisioning profile
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+
+          # Extract UUID from profile and use it as filename
+          PP_UUID=$(/usr/libexec/PlistBuddy -c "Print UUID" /dev/stdin <<< $(/usr/bin/security cms -D -i $PP_PATH))
+          cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles/$PP_UUID.provisionprofile
+
+          # Extract profile name for use in build
+          PP_NAME=$(/usr/libexec/PlistBuddy -c "Print Name" /dev/stdin <<< $(/usr/bin/security cms -D -i $PP_PATH))
+          echo "PROVISIONING_PROFILE_NAME=$PP_NAME" >> $GITHUB_ENV
+          echo "Installed provisioning profile: $PP_NAME ($PP_UUID)"
+
+      - name: Prepare Project for CI Build
         run: |
           # Set CODE_SIGN_STYLE to Manual in project file
           sed -i '' 's/CODE_SIGN_STYLE = Automatic;/CODE_SIGN_STYLE = Manual;/g' "$PROJECT/project.pbxproj"
-          # Disable REGISTER_APP_GROUPS to avoid provisioning profile requirement
-          sed -i '' 's/REGISTER_APP_GROUPS = YES;/REGISTER_APP_GROUPS = NO;/g' "$PROJECT/project.pbxproj"
-
-          # Create a build-time entitlements without keychain-access-groups (causes profile requirement)
-          # Save original for later re-signing
-          ENTITLEMENTS_FILE=$(find . -name "*.entitlements" -print -quit)
-          cp "$ENTITLEMENTS_FILE" "$RUNNER_TEMP/original.entitlements"
-
-          # Replace $(AppIdentifierPrefix) with Team ID in the original (for re-signing later)
-          sed -i '' 's/\$(AppIdentifierPrefix)/'"${DEVELOPMENT_TEAM}"'./g' "$RUNNER_TEMP/original.entitlements"
-
-          # Remove keychain-access-groups from build entitlements
-          plutil -remove 'keychain-access-groups' "$ENTITLEMENTS_FILE" 2>/dev/null || true
-
-          echo "=== Build entitlements (without keychain-access-groups) ==="
-          cat "$ENTITLEMENTS_FILE"
-          echo ""
-          echo "=== Final entitlements (for re-signing) ==="
-          cat "$RUNNER_TEMP/original.entitlements"
 
       - name: Build and Archive
         env:
@@ -109,14 +108,14 @@ jobs:
             DEVELOPMENT_TEAM="$DEVELOPMENT_TEAM" \
             CODE_SIGN_STYLE=Manual \
             CODE_SIGN_IDENTITY="Developer ID Application" \
-            PROVISIONING_PROFILE_SPECIFIER="" \
+            PROVISIONING_PROFILE_SPECIFIER="$PROVISIONING_PROFILE_NAME" \
             CODE_SIGN_INJECT_BASE_ENTITLEMENTS=NO \
-            REGISTER_APP_GROUPS=NO \
             OTHER_CODE_SIGN_FLAGS="--timestamp"
 
       - name: Create ExportOptions.plist
         env:
           DEVELOPMENT_TEAM: ${{ secrets.DEVELOPMENT_TEAM }}
+          BUNDLE_ID: "com.thirdwallstudio.Github-Actions-Sandbox"
         run: |
           cat > $RUNNER_TEMP/ExportOptions.plist << EOF
           <?xml version="1.0" encoding="UTF-8"?>
@@ -131,6 +130,11 @@ jobs:
               <string>manual</string>
               <key>signingCertificate</key>
               <string>Developer ID Application</string>
+              <key>provisioningProfiles</key>
+              <dict>
+                  <key>${BUNDLE_ID}</key>
+                  <string>${PROVISIONING_PROFILE_NAME}</string>
+              </dict>
           </dict>
           </plist>
           EOF
@@ -141,45 +145,6 @@ jobs:
             -archivePath $RUNNER_TEMP/archive.xcarchive \
             -exportPath $RUNNER_TEMP/export \
             -exportOptionsPlist $RUNNER_TEMP/ExportOptions.plist
-
-      - name: Re-sign App with Keychain Entitlements
-        run: |
-          APP_PATH="$RUNNER_TEMP/export/$PRODUCT_NAME.app"
-
-          # Sign nested components first (inside out) - frameworks, dylibs, XPC services
-          # Sign all Mach-O binaries inside Frameworks
-          if [ -d "$APP_PATH/Contents/Frameworks" ]; then
-            find "$APP_PATH/Contents/Frameworks" -type f \( -name "*.dylib" -o -perm +111 \) 2>/dev/null | while read -r file; do
-              # Check if it's a Mach-O binary
-              if file "$file" | grep -q "Mach-O"; then
-                codesign --force --sign "Developer ID Application" --options runtime --timestamp "$file" 2>/dev/null || true
-              fi
-            done
-
-            # Sign framework bundles
-            find "$APP_PATH/Contents/Frameworks" -name "*.framework" -type d 2>/dev/null | while read -r framework; do
-              codesign --force --sign "Developer ID Application" --options runtime --timestamp "$framework"
-            done
-          fi
-
-          # Sign XPC services if any
-          find "$APP_PATH" -name "*.xpc" -type d 2>/dev/null | while read -r xpc; do
-            codesign --force --sign "Developer ID Application" --options runtime --timestamp "$xpc"
-          done
-
-          # Finally sign the main app with entitlements
-          codesign --force --sign "Developer ID Application" \
-            --entitlements "$RUNNER_TEMP/original.entitlements" \
-            --options runtime \
-            --timestamp \
-            "$APP_PATH"
-
-          # Verify the signature
-          codesign --verify --deep --strict "$APP_PATH"
-          echo "Signature verification passed"
-
-          echo "=== Entitlements in signed app ==="
-          codesign -d --entitlements - "$APP_PATH"
 
       - name: Notarize App
         env:
