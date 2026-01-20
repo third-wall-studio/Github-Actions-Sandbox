@@ -36,6 +36,7 @@ Configure these secrets in your repository settings (Settings > Secrets and vari
 | `APPLE_ID` | Your Apple ID email for notarization |
 | `APPLE_ID_PASSWORD` | App-specific password for notarization |
 | `SPARKLE_PRIVATE_KEY` | EdDSA private key for Sparkle updates |
+| `PROVISIONING_PROFILE_BASE64` | Base64-encoded Developer ID provisioning profile (required if using Keychain Sharing or other entitlements) |
 
 ### Setting Up Secrets
 
@@ -88,6 +89,26 @@ security find-identity -v -p codesigning
 # Team ID is the 10-character code in parentheses
 # Example: "Developer ID Application: Your Name (ABC123XYZ0)"
 #                                               ^^^^^^^^^^
+```
+
+#### 5. Create Developer ID Provisioning Profile (Required for Keychain Sharing)
+
+If your app uses Keychain Sharing, App Groups, or other entitlements, you need a provisioning profile:
+
+1. Go to [Apple Developer Portal - Identifiers](https://developer.apple.com/account/resources/identifiers/list)
+2. Create or select your App ID matching your bundle identifier
+3. Go to [Profiles](https://developer.apple.com/account/resources/profiles/list)
+4. Click **+** to create a new profile
+5. Select **Developer ID** under Distribution
+6. Select your App ID
+7. Select your Developer ID Application certificate
+8. Name it (e.g., "Your App Developer ID")
+9. Download the `.provisionprofile` file
+10. Convert to base64:
+
+```bash
+base64 -i "YourApp_Developer_ID.provisionprofile" | pbcopy
+# Paste as PROVISIONING_PROFILE_BASE64 secret
 ```
 
 ### Appcast Setup for Sparkle

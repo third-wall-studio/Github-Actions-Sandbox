@@ -90,11 +90,6 @@ jobs:
           echo "PROVISIONING_PROFILE_NAME=$PP_NAME" >> $GITHUB_ENV
           echo "Installed provisioning profile: $PP_NAME ($PP_UUID)"
 
-      - name: Prepare Project for CI Build
-        run: |
-          # Set CODE_SIGN_STYLE to Manual in project file
-          sed -i '' 's/CODE_SIGN_STYLE = Automatic;/CODE_SIGN_STYLE = Manual;/g' "$PROJECT/project.pbxproj"
-
       - name: Build and Archive
         env:
           DEVELOPMENT_TEAM: ${{ secrets.DEVELOPMENT_TEAM }}
