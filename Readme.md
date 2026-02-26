@@ -168,6 +168,8 @@ env:
   PROJECT: "Your App.xcodeproj"
   PRODUCT_NAME: "Your App"
   DMG_BACKGROUND_FILE_NAME: "Assets/background@2x.png"
+  BUNDLE_ID: "com.yourcompany.Your-App"
+  APPCAST_PATH: "docs/appcast.xml"
 ```
 
 ### Workflow Requirements

@@ -17,6 +17,8 @@ env:
   PROJECT: "Github Actions Sandbox.xcodeproj"
   PRODUCT_NAME: "Github Actions Sandbox"
   DMG_BACKGROUND_FILE_NAME: "Assets/background@2x.png"
+  BUNDLE_ID: "com.thirdwallstudio.Github-Actions-Sandbox"
+  APPCAST_PATH: "docs/appcast.xml"
 
 jobs:
   build:
@@ -110,7 +112,6 @@ jobs:
       - name: Create ExportOptions.plist
         env:
           DEVELOPMENT_TEAM: ${{ secrets.DEVELOPMENT_TEAM }}
-          BUNDLE_ID: "com.thirdwallstudio.Github-Actions-Sandbox"
         run: |
           cat > $RUNNER_TEMP/ExportOptions.plist << EOF
           <?xml version="1.0" encoding="UTF-8"?>
@@ -239,7 +240,7 @@ jobs:
           EOF
 
           # Insert the new item after <!-- new first --> marker (newest items first)
-          sed -i '' '/<!-- new first -->/r item.xml' docs/appcast.xml
+          sed -i '' '/<!-- new first -->/r item.xml' "$APPCAST_PATH"
 
       - name: "Sparkle: Commit and push appcast.xml & new version changes"
         env:
@@ -247,7 +248,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/appcast.xml
+          git add "$APPCAST_PATH"
           git add "$PROJECT/project.pbxproj"
           git commit -m "Update appcast.xml for version ${{ steps.version.outputs.version }}"
           git push origin HEAD:main
