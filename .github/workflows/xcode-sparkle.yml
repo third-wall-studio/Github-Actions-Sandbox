@@ -1,0 +1,286 @@
+name: Release macOS App
+
+on:
+  workflow_call:
+    inputs:
+      scheme:
+        description: "Xcode scheme name"
+        required: true
+        type: string
+      project:
+        description: "Xcode project file name (e.g., App.xcodeproj)"
+        required: true
+        type: string
+      product_name:
+        description: "Product name for the app"
+        required: true
+        type: string
+      dmg_background_file_name:
+        description: "Path to DMG background image"
+        required: true
+        type: string
+      bundle_id:
+        description: "App bundle identifier"
+        required: true
+        type: string
+      appcast_path:
+        description: "Path to Sparkle appcast.xml file"
+        required: true
+        type: string
+      version:
+        description: "Version number to release"
+        required: true
+        type: string
+
+    secrets:
+      CERTIFICATE_BASE64:
+        required: true
+      CERTIFICATE_PASSWORD:
+        required: true
+      KEYCHAIN_PASSWORD:
+        required: true
+      DEVELOPMENT_TEAM:
+        required: true
+      PROVISIONING_PROFILE_BASE64:
+        required: true
+      APPLE_ID:
+        required: true
+      APPLE_ID_PASSWORD:
+        required: true
+      SPARKLE_PRIVATE_KEY:
+        required: true
+
+env:
+  SCHEME: ${{ inputs.scheme }}
+  PROJECT: ${{ inputs.project }}
+  PRODUCT_NAME: ${{ inputs.product_name }}
+  DMG_BACKGROUND_FILE_NAME: ${{ inputs.dmg_background_file_name }}
+  BUNDLE_ID: ${{ inputs.bundle_id }}
+  APPCAST_PATH: ${{ inputs.appcast_path }}
+  VERSION: ${{ inputs.version }}
+
+jobs:
+  build:
+    runs-on: macos-26
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Select Xcode
+        run: |
+          sudo xcode-select -s /Applications/Xcode_26.1.app/Contents/Developer
+          xcodebuild -version
+
+      - name: Set version in Xcode project
+        run: |
+          sed -i '' "s/MARKETING_VERSION = [^;]*;/MARKETING_VERSION = $VERSION;/g" "$PROJECT/project.pbxproj"
+          sed -i '' "s/CURRENT_PROJECT_VERSION = [^;]*;/CURRENT_PROJECT_VERSION = $VERSION;/g" "$PROJECT/project.pbxproj"
+
+      - name: Import Code Signing Certificate
+        env:
+          CERTIFICATE_BASE64: ${{ secrets.CERTIFICATE_BASE64 }}
+          CERTIFICATE_PASSWORD: ${{ secrets.CERTIFICATE_PASSWORD }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+        run: |
+          # Create variables
+          CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
+          KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
+
+          # Decode certificate from base64
+          echo -n "$CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
+
+          # Create temporary keychain
+          security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+
+          # Import certificate to keychain
+          security import $CERTIFICATE_PATH -P "$CERTIFICATE_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+          security set-key-partition-list -S apple-tool:,apple: -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security list-keychain -d user -s $KEYCHAIN_PATH
+
+      - name: Install Provisioning Profile
+        env:
+          PROVISIONING_PROFILE_BASE64: ${{ secrets.PROVISIONING_PROFILE_BASE64 }}
+        run: |
+          # Decode provisioning profile
+          PP_PATH=$RUNNER_TEMP/profile.provisionprofile
+          echo -n "$PROVISIONING_PROFILE_BASE64" | base64 --decode -o $PP_PATH
+
+          # Install provisioning profile
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+
+          # Extract UUID from profile and use it as filename
+          PP_UUID=$(/usr/libexec/PlistBuddy -c "Print UUID" /dev/stdin <<< $(/usr/bin/security cms -D -i $PP_PATH))
+          cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles/$PP_UUID.provisionprofile
+
+          # Extract profile name for use in build
+          PP_NAME=$(/usr/libexec/PlistBuddy -c "Print Name" /dev/stdin <<< $(/usr/bin/security cms -D -i $PP_PATH))
+          echo "PROVISIONING_PROFILE_NAME=$PP_NAME" >> $GITHUB_ENV
+          echo "Installed provisioning profile: $PP_NAME ($PP_UUID)"
+
+      - name: Build and Archive
+        env:
+          DEVELOPMENT_TEAM: ${{ secrets.DEVELOPMENT_TEAM }}
+        run: |
+          xcodebuild archive \
+            -project "$PROJECT" \
+            -scheme "$SCHEME" \
+            -configuration Release \
+            -destination "generic/platform=macOS" \
+            -archivePath $RUNNER_TEMP/archive.xcarchive \
+            DEVELOPMENT_TEAM="$DEVELOPMENT_TEAM" \
+            CODE_SIGN_STYLE=Manual \
+            CODE_SIGN_IDENTITY="Developer ID Application" \
+            PROVISIONING_PROFILE_SPECIFIER="$PROVISIONING_PROFILE_NAME" \
+            CODE_SIGN_INJECT_BASE_ENTITLEMENTS=NO \
+            OTHER_CODE_SIGN_FLAGS="--timestamp"
+
+      - name: Create ExportOptions.plist
+        env:
+          DEVELOPMENT_TEAM: ${{ secrets.DEVELOPMENT_TEAM }}
+        run: |
+          cat > $RUNNER_TEMP/ExportOptions.plist << EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+              <key>method</key>
+              <string>developer-id</string>
+              <key>teamID</key>
+              <string>${DEVELOPMENT_TEAM}</string>
+              <key>signingStyle</key>
+              <string>manual</string>
+              <key>signingCertificate</key>
+              <string>Developer ID Application</string>
+              <key>provisioningProfiles</key>
+              <dict>
+                  <key>${BUNDLE_ID}</key>
+                  <string>${PROVISIONING_PROFILE_NAME}</string>
+              </dict>
+          </dict>
+          </plist>
+          EOF
+
+      - name: Export App
+        run: |
+          xcodebuild -exportArchive \
+            -archivePath $RUNNER_TEMP/archive.xcarchive \
+            -exportPath $RUNNER_TEMP/export \
+            -exportOptionsPlist $RUNNER_TEMP/ExportOptions.plist
+
+      - name: Notarize App
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.DEVELOPMENT_TEAM }}
+        run: |
+          # Create ZIP for notarization
+          cd $RUNNER_TEMP/export
+          ditto -c -k --keepParent "$PRODUCT_NAME.app" "$PRODUCT_NAME-notorized.zip"
+
+          # Submit for notarization
+          xcrun notarytool submit "$PRODUCT_NAME-notorized.zip" \
+            --apple-id "$APPLE_ID" \
+            --password "$APPLE_ID_PASSWORD" \
+            --team-id "$APPLE_TEAM_ID" \
+            --wait
+
+          # Staple the notarization ticket
+          xcrun stapler staple "$PRODUCT_NAME.app"
+
+      - name: "DMG: Install tool"
+        run: |
+          curl -L -o dmgs.tar.gz https://github.com/velocityzen/dmgs/releases/latest/download/dmgs.tar.gz
+          tar -xzf dmgs.tar.gz
+          chmod +x dmgs
+          sudo mv dmgs /usr/local/bin/
+
+      - name: "DMG: create .dmg"
+        env:
+          DEVELOPMENT_TEAM: ${{ secrets.DEVELOPMENT_TEAM }}
+        run: dmgs create "$RUNNER_TEMP/export/$PRODUCT_NAME.app" "$DMG_BACKGROUND_FILE_NAME" --sign "$DEVELOPMENT_TEAM"
+
+      - name: "DMG: Upload DMG Artifact"
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.PRODUCT_NAME }}-${{ env.VERSION }}
+          path: ${{ env.PRODUCT_NAME }}.dmg
+
+      - name: "Sparkle: Install CLI tools"
+        run: |
+          # Download Sparkle release with CLI tools
+          mkdir sparkle
+          cd sparkle
+          curl -L -o sparkle.tar.xz https://github.com/sparkle-project/Sparkle/releases/download/2.8.1/Sparkle-2.8.1.tar.xz
+          tar -xf sparkle.tar.xz
+          # Make tools accessible
+          chmod +x bin/generate_appcast
+          sudo mv bin/generate_appcast /usr/local/bin/
+          chmod +x bin/sign_update
+          sudo mv bin/sign_update /usr/local/bin/
+          cd ..
+          rm -rf sparkle
+
+      - name: "Sparkle: Sign update package"
+        env:
+          SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
+        run: |
+          # Sign the update with Sparkle's private key
+          SIGNATURE=$(echo "$SPARKLE_PRIVATE_KEY" | sign_update --ed-key-file - "$PRODUCT_NAME.dmg")
+          echo "SPARKLE_SIGNATURE=$SIGNATURE" >> $GITHUB_ENV
+          FILE_SIZE=$(stat -f%z "$PRODUCT_NAME.dmg")
+          echo "FILE_SIZE=$FILE_SIZE" >> $GITHUB_ENV
+
+      - name: Create GitHub Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "$VERSION" \
+            "${{ env.PRODUCT_NAME }}.dmg" \
+            --title "$VERSION" \
+            --notes "Version $VERSION"
+
+      - name: "Sparkle: Update appcast.xml"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # if PRODUCT_NAME has spaces, replace them with dots
+          DOWNLOAD_DMG_NAME="${PRODUCT_NAME// /.}.dmg"
+          DOWNLOAD_URL="https://github.com/${{ github.repository }}/releases/download/$VERSION/$DOWNLOAD_DMG_NAME"
+          PUB_DATE=$(date -R)
+
+          # Create the new item XML in a temp file
+          cat > item.xml << EOF
+
+            <item>
+                <title>Version $VERSION</title>
+                <sparkle:version>$VERSION</sparkle:version>
+                <pubDate>$PUB_DATE</pubDate>
+                <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+                <enclosure
+                    url="$DOWNLOAD_URL"
+                    ${{ env.SPARKLE_SIGNATURE }}
+                    type="application/octet-stream" />
+            </item>
+          EOF
+
+          # Insert the new item after <!-- new first --> marker (newest items first)
+          sed -i '' '/<!-- new first -->/r item.xml' "$APPCAST_PATH"
+
+      - name: "Sparkle: Commit and push appcast.xml & new version changes"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add "$APPCAST_PATH"
+          git add "$PROJECT/project.pbxproj"
+          git commit -m "Update appcast.xml for version $VERSION"
+          git push origin HEAD:main
+
+      - name: Cleanup Keychain
+        if: always()
+        run: |
+          security delete-keychain $RUNNER_TEMP/app-signing.keychain-db || true

@@ -4,7 +4,7 @@ macOS app with automated release workflow using GitHub Actions.
 
 ## Release Process Setup
 
-This project uses a GitHub Actions workflow (`.github/workflows/release.yml`) to automate the release process including building, signing, notarizing, and distributing the macOS app.
+This project uses a reusable GitHub Actions workflow (`.github/workflows/xcode-sparkle.yml`) to automate the release process including building, signing, notarizing, and distributing the macOS app. The caller workflow (`.github/workflows/release.yml`) passes project-specific configuration to the reusable workflow.
 
 ### What the Workflow Does
 
@@ -154,22 +154,58 @@ The workflow triggers on tags matching `v*` pattern.
 #### Option 2: Manual Dispatch
 
 1. Go to Actions tab in GitHub
-2. Select "Release macOS App" workflow
+2. Select your caller workflow (e.g., "Release Github Actions Sandbox")
 3. Click "Run workflow"
 4. Optionally enter a version number
 
-### Customizing the Workflow
+### Using the Reusable Workflow
 
-Update the environment variables in `release.yml` to match your project:
+The release logic lives in `xcode-sparkle.yml` as a reusable workflow (`workflow_call`). To use it in your project, create a caller workflow:
 
 ```yaml
-env:
-  SCHEME: "Your App Scheme"
-  PROJECT: "Your App.xcodeproj"
-  PRODUCT_NAME: "Your App"
-  DMG_BACKGROUND_FILE_NAME: "Assets/background@2x.png"
-  BUNDLE_ID: "com.yourcompany.Your-App"
-  APPCAST_PATH: "docs/appcast.xml"
+name: Release Your App
+
+on:
+  push:
+    tags:
+      - "v*"
+
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version number (e.g., 1.0.0)"
+        required: false
+        type: string
+
+jobs:
+  get-version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - name: Get version
+        id: version
+        run: |
+          if [ -n "${{ inputs.version }}" ]; then
+            echo "version=${{ inputs.version }}" >> $GITHUB_OUTPUT
+          elif [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+          else
+            echo "version=$(date +%Y%m%d%H%M%S)" >> $GITHUB_OUTPUT
+          fi
+
+  release:
+    needs: get-version
+    uses: ./.github/workflows/xcode-sparkle.yml
+    with:
+      scheme: "Your App Scheme"
+      project: "Your App.xcodeproj"
+      product_name: "Your App"
+      dmg_background_file_name: "Assets/background@2x.png"
+      bundle_id: "com.yourcompany.Your-App"
+      appcast_path: "docs/appcast.xml"
+      version: ${{ needs.get-version.outputs.version }}
+    secrets: inherit
 ```
 
 ### Workflow Requirements
