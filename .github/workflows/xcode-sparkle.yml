@@ -1,4 +1,4 @@
-name: Release macOS App
+name: Release XCode + Sparkle macOS App
 
 on:
   workflow_call:
