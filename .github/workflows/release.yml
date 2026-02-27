@@ -26,7 +26,7 @@ jobs:
           elif [[ "$GITHUB_REF" == refs/tags/v* ]]; then
             echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
           else
-            echo "version=$(date +%Y%m%d%H%M%S)" >> $GITHUB_OUTPUT
+            echo "version=$(date +%Y%m%d%H%M%S)-${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
           fi
 
   release:
