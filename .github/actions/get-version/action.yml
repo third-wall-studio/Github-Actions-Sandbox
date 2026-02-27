@@ -1,0 +1,28 @@
+name: Get Version
+description: Extracts version from tag, manual input, or generates a fallback
+
+inputs:
+  version:
+    description: "Manual version override (e.g., 1.0.0)"
+    required: false
+    default: ""
+
+outputs:
+  version:
+    description: "Resolved version string"
+    value: ${{ steps.version.outputs.version }}
+
+runs:
+  using: composite
+  steps:
+    - name: Get version
+      id: version
+      shell: bash
+      run: |
+        if [ -n "${{ inputs.version }}" ]; then
+          echo "version=${{ inputs.version }}" >> $GITHUB_OUTPUT
+        elif [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+          echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+        else
+          echo "version=$(date +%Y%m%d%H%M%S)-${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
+        fi
